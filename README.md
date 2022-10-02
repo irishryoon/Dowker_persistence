@@ -1,6 +1,6 @@
 # Dowker persistence
 
-Given two point clouds, compute the [Dowker persistence diagrams](https://arxiv.org/abs/1608.05432) in dimensions 0 or 1. 
+This repository contains code for computing the [Dowker persistence diagrams](https://arxiv.org/abs/1608.05432) of two point clouds in dimensions 0 or 1. Please note that we use the term "Dowker" and "Witness" interchangeably.  
 
 ## Install
 Download [Julia](https://julialang.org/downloads/).
