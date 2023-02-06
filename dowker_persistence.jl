@@ -28,7 +28,10 @@ export
     get_Witness_cyclerep,
     plot_PD,
     plot_P_Q,
-    plot_cycle
+    plot_cycle,
+    get_1simplices,
+    get_2simplices,
+    plot_Dowker_complex
 plotly()
 
 #############################################################################################
@@ -1238,6 +1241,84 @@ if cutoff != nothing
 end
 
 return p
+end
+
+
+function get_1simplices(D_param)
+    n_cols = size(D_param, 2)
+    one_simplices = []
+    for i = 1:n_cols
+        rows = findall(x -> x == 1, D_param[:,i])
+        append!(one_simplices, combinations(rows, 2))
+    end
+    
+    return one_simplices
+end
+
+function get_2simplices(D_param)
+    n_cols = size(D_param,2)
+    two_simplices = []
+    for i = 1:n_cols
+        ones = findall(D_param[:,i])
+        append!(two_simplices, collect(combinations(ones,3)))
+    end
+    
+    return unique(two_simplices)
+end
+
+"""
+    plot_Dowker_complex
+Given a dissimilarity matrix D, compute the Dowker complex at parameter `param`.
+Uses the rows as potential vertex set. Must provide `PC`, the locations of vertex set corresponding to the rows.
+
+### Inputs
+- `D`: Dissimilarity matrix
+- `param`: Parameter. Builds the Dowker complex at this parameter.
+- `PC`: An array of size (n,2), where n is the number of rows of D. 
+        Provides (x,y)-coordinates of vertices corresponding to the  rows of D. 
+
+### Outputs
+- a plot
+"""
+function plot_Dowker_complex(D, param, PC; 
+                             show_2simplex = false, 
+                             show_unborn_vertices = false,
+                             c = "#29A0B1",
+                            kwargs...)
+    n_rows, n_cols = size(D)
+    D_param = D .< param
+    
+    p = plot()
+    
+    # plot 2-simplices
+    if show_2simplex == true
+        two_simplices = get_2simplices(D_param)
+        for simplex in two_simplices
+            plot!(p, Plots.Shape([(PC[i,1], PC[i,2]) for i in simplex]), 
+                 label="", legend = :false, c = c, alpha = 0.1
+                 )
+        end
+    end
+    
+    # plot 1-simplices
+    one_simplices = get_1simplices(D_param)
+    for simplex in one_simplices
+        plot!(p, [PC[simplex[1],1], PC[simplex[2],1]], [PC[simplex[1],2], PC[simplex[2],2]], label = "", c = :black) 
+    end
+    
+    # plot 0-simplices
+    idx0 = findall(x -> x != 0, vec(sum(D_param, dims = 2)))
+    scatter!(p, PC[idx0,1], PC[idx0, 2]; label = "", frame = :box, ticks = [], c = c, aspect_ratio = :equal, kwargs...)
+    
+    # plot unborn vertices 
+    if show_unborn_vertices == true
+        idx_unborn = findall(x -> x == 0, vec(sum(D_param, dims = 2)))
+        scatter!(p, PC[idx_unborn,1], PC[idx_unborn, 2], label = "",
+                 markershape = :xcross,
+                 markerstrokewidth = 3,
+                 c = c) 
+    end
+    return p
 end
 
 end
