@@ -5,7 +5,7 @@ This repository contains code for computing the [Dowker persistence diagrams](ht
 [![DOI](https://zenodo.org/badge/533378018.svg)](https://zenodo.org/badge/latestdoi/533378018)
 
 ## Install
-Download [Julia](https://julialang.org/downloads/). I recommend using Julia version 1.7.2.
+Download [Julia](https://julialang.org/downloads/). You may run into dependency issues for more recent versions of Julia. I recommend using Julia version 1.7.2.
 
 ## Quick start
 
