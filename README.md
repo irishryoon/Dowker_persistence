@@ -5,16 +5,18 @@ This repository contains code for computing the [Dowker persistence diagrams](ht
 [![DOI](https://zenodo.org/badge/533378018.svg)](https://zenodo.org/badge/latestdoi/533378018)
 
 ## Install
-Download [Julia](https://julialang.org/downloads/).
+Download [Julia](https://julialang.org/downloads/). I recommend using Julia version 1.7.2.
 
 ## Quick start
 
 ```
 import Pkg
 Pkg.activate(".")
+Pkg.instantiate()
 include("dowker_persistence.jl")
+include("Eirene_var.jl)
 using .Dowker
-using Eirene
+using .Eirene_var
 using DelimitedFiles
 
 # load points
@@ -26,7 +28,7 @@ D1, D2, D_P1_P2, D_P2_P1 = compute_distance(P1, P2)
 
 # compute Dowker persistence
 W_P1_P2 = compute_Witness_persistence(D_P1_P2, maxdim = 1)
-W_barcode = Eirene.barcode(W_P1_P2["eirene_output"], dim = 1)
+W_barcode = Eirene_var.barcode(W_P1_P2["eirene_output"], dim = 1)
 
 # plot Dowker persistence diagram
 plot_PD(W_barcode, title = "Dowker persistence diagram")
