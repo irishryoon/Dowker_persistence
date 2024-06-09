@@ -6,9 +6,10 @@ irishryoon@gmail.com
 """
 module Dowker
 
+include("Eirene_var.jl")
 using Combinatorics
 using Distances
-using Eirene
+using .Eirene_var
 using Interact
 using IJulia
 using JLD
