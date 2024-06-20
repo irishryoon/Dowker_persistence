@@ -772,7 +772,7 @@ function select_simplices_at_psi(
     simplices: array of simplices that exist at parameter delta 
             simplices[i] is an array of (i-1) dimensional simplices that exist at parameter delta
     """
-    rv, cp, fv = Eirene.eirened2complex(C)
+    rv, cp, fv = Eirene_var.eirened2complex(C)
     simplices = []
     for d = 1:maxdim + 1
         push!(simplices, findall(x -> x <= psi, fv[d]))
@@ -804,7 +804,7 @@ function create_idx_to_simplex_V(
     end
 
     # get boundary matrix
-    rv, cp, fv = Eirene.eirened2complex(C)
+    rv, cp, fv = Eirene_var.eirened2complex(C)
         
     idx_smplx = Dict()
     for d = 1:maxdim
@@ -998,7 +998,7 @@ function bounding_chain(C;chain=zeros(Int64,0),dim=1)
     
 	if isempty(chain)
 		return zeros(Int64,0)
-	elseif !isempty(Eirene.chainboundary(C,chain=chain,dim=dim))
+	elseif !isempty(Eirene_var.chainboundary(C,chain=chain,dim=dim))
 		print("there is no bounding chain"); return nothing
 	else
 		sd 			= 	dim+1;
@@ -1006,14 +1006,14 @@ function bounding_chain(C;chain=zeros(Int64,0),dim=1)
 		Lcp 		= 	C["Lcp"][sd+1]
 		Rrv 		= 	C["Rrv"][sd+1]
 		Rcp 		= 	C["Rcp"][sd+1]
-		numrows 	= 	Eirene.boundarycorank(C,dim=dim)
-		translator 	= 	zeros(Int64,Eirene.complexrank(C,dim=dim))
+		numrows 	= 	Eirene_var.boundarycorank(C,dim=dim)
+		translator 	= 	zeros(Int64,Eirene_var.complexrank(C,dim=dim))
 		translator[C["tid"][sd+1]] = 1:numrows
 		rv 			= 	findall(!iszero,translator[chain])
 		rv 			=  	translator[chain[rv]]
 		cp 			= 	[1,length(rv)+1]
-		rv,cp 		=  	Eirene.spmmF2silentLeft(Lrv,Lcp,rv,cp,numrows)
-		rv,cp 		=  	Eirene.spmmF2silentLeft(Rrv,Rcp,rv,cp,numrows)
+		rv,cp 		=  	Eirene_var.spmmF2silentLeft(Lrv,Lcp,rv,cp,numrows)
+		rv,cp 		=  	Eirene_var.spmmF2silentLeft(Rrv,Rcp,rv,cp,numrows)
 		#
 		# recall that plo = the (ordered) subvector consisting of
 		# the first (rank(boundary operator)) elements of tid
@@ -1059,7 +1059,7 @@ function simplex_to_index(simplex, C)
     dim = size(simplex,1) - 1
 
     # given simplex_eirene =[u_0, u_1, ... , u_n], find the portion of row-indices for column u0
-    rowvals = Eirene.crows(C["firstv"][dim+1], C["farfaces"][dim+1], simplex[1])
+    rowvals = Eirene_var.crows(C["firstv"][dim+1], C["farfaces"][dim+1], simplex[1])
 
     # find location of [u_1, ..., u_n] in rowvals.
     # that is, find the index of [u_1, ..., u_n] among C_{n-1}.
